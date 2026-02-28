@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      context: ./docker/php
+    container_name: saas_app
+    working_dir: /var/www
+    volumes:
+      - ./backend:/var/www
+    networks:
+      - saas_network
+
+  nginx:
+    image: nginx:alpine
+    container_name: saas_nginx
+    ports:
+      - "8000:80"
+    volumes:
+      - ./backend:/var/www
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - app
+    networks:
+      - saas_network
+
+  mysql:
+    image: mysql:8.0
+    container_name: saas_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: saas_db
+      MYSQL_USER: saas_user
+      MYSQL_PASSWORD: saas_pass
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - saas_network
+
+volumes:
+  mysql_data:
+
+networks:
+  saas_network:

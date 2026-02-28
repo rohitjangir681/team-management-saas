@@ -1,0 +1,19 @@
+# Laravel
+/backend/vendor/
+/backend/node_modules/
+/backend/.env
+/backend/storage/*.key
+
+# Vue
+/frontend/node_modules/
+/frontend/dist/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker
+mysql_data/
