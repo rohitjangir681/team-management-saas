@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   app:
     build:
@@ -41,8 +39,20 @@ services:
     networks:
       - saas_network
 
+  phpmyadmin:                         
+    image: phpmyadmin:latest
+    container_name: saas_phpmyadmin
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    networks:
+      - saas_network
+
 volumes:
   mysql_data:
 
 networks:
   saas_network:
+

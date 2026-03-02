@@ -11,6 +11,22 @@ import {
 } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useAuthStore } from "@/stores/auth";
+import { ref } from "vue";
+
+const authStore = useAuthStore();
+
+const form = ref({
+    email: '',
+    password: ''
+});
+
+async function handleLogin()
+{
+    await authStore.login(form.value);
+}
+
+
 </script>
 
 <template>
@@ -22,15 +38,18 @@ import { Label } from "@/components/ui/label"
                 Enter your email below to login to your account
             </CardDescription>
             <CardAction>
-                <Button variant="link">Sign Up</Button>
+                <RouterLink :to="{name: 'register'}">
+                    <Button variant="link">Sign Up</Button>
+                </RouterLink>
             </CardAction>
         </CardHeader>
         <CardContent>
-            <form>
+            <!-- wrap footer buttons inside the same form so the login submit lives within it -->
+            <form @submit.prevent="handleLogin">
                 <div class="flex flex-col gap-6">
                     <div class="grid gap-2">
                         <Label htmlFor="email">Email</Label>
-                        <Input id="email" type="email" placeholder="m@example.com" />
+                        <Input id="email" type="email" placeholder="m@example.com" v-model="form.email"/>
                     </div>
                     <div class="grid gap-2">
                         <div class="flex items-center justify-between w-full">
@@ -39,19 +58,21 @@ import { Label } from "@/components/ui/label"
                                 Forgot your password?
                             </a>
                         </div>
-                        <Input id="password" type="password" required />
+                        <Input id="password" type="password" v-model="form.password" />
                     </div>
                 </div>
+
+                <CardFooter class="flex-col gap-2 pt-6">
+                    <Button type="submit" class="w-full">
+                        Login
+                    </Button>
+                    <!-- Google login doesn't submit the form; use a normal button type to avoid accidental form submit -->
+                    <Button variant="outline" type="button" class="w-full">
+                        Login with Google
+                    </Button>
+                </CardFooter>
             </form>
         </CardContent>
-        <CardFooter class="flex-col gap-2">
-            <Button type="submit" class="w-full">
-                Login
-            </Button>
-            <Button variant="outline" class="w-full">
-                Login with Google
-            </Button>
-        </CardFooter>
     </Card>
   </div>
 </template>

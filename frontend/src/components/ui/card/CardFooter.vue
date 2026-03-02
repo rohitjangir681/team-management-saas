@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from "vue"
+import { useAttrs } from "vue"
 import { cn } from "@/lib/utils"
 
-const props = defineProps<{
-  class?: HTMLAttributes["class"]
-}>()
+const attrs = useAttrs()
 </script>
 
 <template>
   <div
     data-slot="card-footer"
-    :class="cn('flex items-center px-6 [.border-t]:pt-6', props.class)"
+    v-bind="attrs"
+    :class="cn('flex items-center px-6 [.border-t]:pt-6', attrs.class)"
   >
     <slot />
   </div>
