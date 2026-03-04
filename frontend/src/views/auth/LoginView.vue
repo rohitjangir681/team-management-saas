@@ -47,6 +47,9 @@ async function handleLogin()
             <!-- wrap footer buttons inside the same form so the login submit lives within it -->
             <form @submit.prevent="handleLogin">
                 <div class="flex flex-col gap-6">
+                    <p v-if="authStore.error" class="text-red-500 text-sm text-center">
+						{{ authStore.error }}
+					</p>
                     <div class="grid gap-2">
                         <Label htmlFor="email">Email</Label>
                         <Input id="email" type="email" placeholder="m@example.com" v-model="form.email"/>

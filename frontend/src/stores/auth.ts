@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import api from '@/lib/axios';
+import type { RegisterData, LoginData } from "@/types/auth";
 
 export const useAuthStore = defineStore('auth', () => {
     const user = ref(null);
@@ -12,16 +13,11 @@ export const useAuthStore = defineStore('auth', () => {
 
     // Get CSRF cookie from Laravel (required before login/register)
     async function getCsrfCookie() {
-        await api.get(`${import.meta.env.VITE_API_URL}/sanctum/csrf-cookie`);
+        await api.get(`http://localhost:8000/sanctum/csrf-cookie`);
     }
 
     // register
-   async function register(data: {
-        name: string,
-        email: string,
-        password: string,
-        password_confirmation: string
-    })
+   async function register(data: RegisterData)
     {
         loading.value =  true;
         error.value = '';
@@ -44,10 +40,7 @@ export const useAuthStore = defineStore('auth', () => {
     }
 
     // Login
-    async function login(data: {
-        email: string,
-        password: string
-    })
+    async function login(data: LoginData)
     {
         loading.value = true;
         error.value   = ''

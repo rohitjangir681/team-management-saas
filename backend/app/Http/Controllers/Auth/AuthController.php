@@ -20,6 +20,8 @@ class AuthController extends Controller
 
         Auth::login($result['user']);
 
+        $request->session()->regenerate();
+
         return response()->json([
             'message' => 'Account created successfully',
             'user' => $result['user']
@@ -31,6 +33,8 @@ class AuthController extends Controller
        $result = $this->authService->login($request->validated());
 
        Auth::login($result['user']);
+
+       $request->session()->regenerate();
 
         return response()->json([
             'message' => 'Login successful',
