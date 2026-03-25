@@ -4,5 +4,5 @@
 
 <template>
     <h2>This is dashboard Contentn</h2>
-    <RouterLink :to="{ name: 'users' }">Users</RouterLink>
+    <RouterLink :to="{ name: 'workspace.users' }">Users</RouterLink>
 </template>

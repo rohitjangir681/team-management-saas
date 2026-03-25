@@ -50,6 +50,15 @@ services:
     networks:
       - saas_network
 
+  mailpit:
+    image: axllent/mailpit:edge
+    container_name: saas_mailpit
+    ports:
+      - "1025:1025"
+      - "8025:8025"
+    networks:
+      - saas_network
+
 volumes:
   mysql_data:
 
