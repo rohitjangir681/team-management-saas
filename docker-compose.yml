@@ -59,6 +59,21 @@ services:
     networks:
       - saas_network
 
+  queue-worker:
+    build:
+      context: ./docker/php
+    container_name: saas_queue_worker
+    user: "1000:1000"
+    working_dir: /var/www
+    volumes:
+      - ./backend:/var/www
+    command: php artisan queue:work --sleep=3 --tries=3 --timeout=90
+    depends_on:
+      - app
+      - mysql
+    networks:
+      - saas_network
+
 volumes:
   mysql_data:
 

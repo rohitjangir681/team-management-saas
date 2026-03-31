@@ -1,23 +1,45 @@
 <?php 
 namespace App\Services\Auth;
 
+use App\Models\Company\Company;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
 class AuthService
 {
-    public function register(array $data): array
+    public function register(array $data)
     {
-        $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => $data['password']
-        ]);
+        DB::beginTransaction();
+        
+        try {
+            $company = Company::create([
+                'name' => $data['company_name']
+            ]);
+        
+            $user = User::create([
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => $data['password'],
+                'company_id' => $company->id,
+            ]);
 
-        return [
-            'user' => $user
-        ];
+            $user->companies()->attach($company->id, [
+                'role_id' => 1
+            ]);
+
+            DB::commit();
+
+            return [
+                'user' => $user
+            ];
+
+        } catch(\Exception $e) {
+            DB::rollBack();
+            throw $e;
+        }
+        
 
     }
 

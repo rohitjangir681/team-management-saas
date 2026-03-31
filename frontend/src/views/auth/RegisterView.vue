@@ -19,6 +19,7 @@ const authStore = useAuthStore();
 const form = ref({
 	name: '',
 	email: '',
+	company_name: '',
 	password: '',
 	password_confirmation: ''
 });
@@ -42,7 +43,7 @@ async function handleRegister()
 				<RouterLink :to="{name: 'login'}">
 					<Button variant="link">Sign In</Button>
 				</RouterLink>
-			</CardAction>
+			</CardAction> 
 		</CardHeader>
 		<CardContent>
 			<form @submit.prevent="handleRegister">
@@ -75,6 +76,15 @@ async function handleRegister()
 						<p v-if="authStore.errors?.email" class="text-red-500 text-xs">
 							{{ authStore.errors?.email[0] }}
 						</p>
+					</div>
+					<div class="grid gap-2">
+						<Label htmlFor="company_name">Company</Label>
+						<Input 
+							id="company_name"
+							type="text"
+							placeholder="Company name"
+							v-model="form.company_name"
+						/>
 					</div>
 					<div class="grid gap-2">
 						<Label htmlFor="password">Password</Label>
