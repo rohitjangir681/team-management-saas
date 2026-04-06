@@ -22,7 +22,7 @@ class AuthService
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => $data['password'],
-                'company_id' => $company->id,
+                'current_company_id' => $company->id,
             ]);
 
             $user->companies()->attach($company->id, [
