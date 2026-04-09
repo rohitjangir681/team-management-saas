@@ -16,6 +16,10 @@ Route::middleware('auth:sanctum')->prefix('auth')->group(function(){
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
+Route::middleware(['auth:sanctum', 'tenant'])->group(function(){
+    
+});
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
