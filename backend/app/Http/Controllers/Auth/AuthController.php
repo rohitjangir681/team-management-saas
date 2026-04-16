@@ -15,14 +15,14 @@ use Illuminate\Support\Facades\Mail;
 class AuthController extends Controller
 {
 
-    public function __construct(protected AuthService $authService){}
+    public function __construct(protected AuthService $authService) {}
 
     public function register(RegisterRequest $request): JsonResponse
     {
         $result = $this->authService->register($request->validated());
 
         $user = $result['user'];
-        
+
         Mail::to($user->email)->queue(new WelcomeEmail($user));
 
         Auth::login($user);
@@ -37,11 +37,11 @@ class AuthController extends Controller
 
     public function login(LoginRequest $request): JsonResponse
     {
-       $result = $this->authService->login($request->validated());
+        $result = $this->authService->login($request->validated());
 
-       Auth::login($result['user']);
+        Auth::login($result['user']);
 
-       $request->session()->regenerate();
+        $request->session()->regenerate();
 
         return response()->json([
             'message' => 'Login successful',
@@ -67,4 +67,37 @@ class AuthController extends Controller
         ]);
     }
 
+    public function switchWorkspace(Request $request)
+    {
+        $request->validate([
+            'company_id' => 'required|exists:companies,id'
+        ]);
+
+       /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+
+        // Problem: What if I try to switch to a company ID I don't belong to?
+        $belongsToCompany = $user->companies()->where('company_id', $request->company_id)->exists();
+
+        if (!$belongsToCompany) {
+            return response()->json(['message' => 'You do not have access to this workspace.'], 403);
+        }
+
+        // Update the "Current" context
+        $user->update([
+            'current_company_id' => $request->company_id
+        ]);
+
+        // Clear the Redis cache for this user's roles
+        // Why? Because their role in Company A might be 'Owner', 
+        // but in Company B they might only be a 'Member'.
+        $user->forgetCachedPermissions();
+
+        return response()->json([
+            'message' => 'Workspace switched successfully',
+            'current_company_id' => $user->current_company_id,
+            'user' => $user->load('currentCompany') // Give Vue.js the new company details
+        ]);
+    }
 }

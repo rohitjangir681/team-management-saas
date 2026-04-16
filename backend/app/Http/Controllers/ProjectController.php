@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
-use Illuminate\Container\Attributes\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectController extends Controller
 {
@@ -31,7 +31,7 @@ class ProjectController extends Controller
             'description' => 'nullable|string'
         ]);
 
-        $project = Project::created([
+        $project = Project::create([
             'name' => $validated['name'],
             'description' => $validated['description'],
             'company_id' => Auth::user()->current_company_id,
