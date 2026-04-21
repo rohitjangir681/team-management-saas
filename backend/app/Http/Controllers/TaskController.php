@@ -9,12 +9,18 @@ use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+
+        $tasks = Task::with('project')
+            ->search($request->search)
+            ->priority($request->priority)
+            ->status($request->status)
+            ->latest()
+            ->paginate(10);
+
         // Our Multitenantable trait automatically handles the where('company_id')
-        return response()->json([
-            'tasks' => Task::with('project')->latest()->get()
-        ]);
+        return response()->json($tasks);
     }
 
     public function store(Request $request)
