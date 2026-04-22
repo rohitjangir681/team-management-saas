@@ -14,6 +14,14 @@ class TaskObserver
      */
     public function created(Task $task): void
     {
+
+        $key = "project:{$task->project_id}:stats";
+        Redis::hincrby($key, 'total', 1);
+
+        if ($task->status === 'done') {
+            Redis::hincrby($key, 'completed', 1);
+        }
+
         $user = Auth::user();
 
         $activity = [
@@ -38,9 +46,21 @@ class TaskObserver
     /**
      * Handle the Task "updated" event.
      */
+    // When a task status changes (Todo -> Done)
     public function updated(Task $task): void
     {
-        //
+        $key = "project:{$task->project_id}:stats";
+
+        // Only do something if the status actually changed
+        if ($task->isDirty('status')) {
+            if ($task->status === 'done') {
+                Redis::hincrby($key, 'completed', 1);
+            }
+
+            if ($task->getOriginal('status') === 'done') {
+                Redis::hincrby($key, 'completed', -1);
+            }
+        }
     }
 
     /**
@@ -48,7 +68,13 @@ class TaskObserver
      */
     public function deleted(Task $task): void
     {
-        //
+        $key = "project:{$task->project_id}:stats";
+
+        Redis::hincrby($key, 'total', -1);
+
+        if ($task->status === 'done') {
+            Redis::hincrby($key, 'completed', -1);
+        }
     }
 
     /**

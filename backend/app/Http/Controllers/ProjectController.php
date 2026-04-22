@@ -13,7 +13,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        // Because of the Global Scope Trait, this ONLY returns 
+        // Because of the Global Scope Trait, this ONLY returns
         // projects where company_id = current_company_id
         return response()->json([
             'projects' => Project::latest()->get()
@@ -45,7 +45,7 @@ class ProjectController extends Controller
 
     public function destroy(Project $project)
     {
-        // 1. SECURITY: The Global Scope already ensures $project 
+        // 1. SECURITY: The Global Scope already ensures $project
         // belongs to the current company. If it doesn't, Laravel returns 404.
 
         if (!auth()->user()->hasRole('owner')) {

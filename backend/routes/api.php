@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectStatsController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,10 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Your existing project routes
         Route::apiResource('projects', ProjectController::class);
+
+        // The {project} here matches the $projectId variable in your controller
+        Route::get('/projects/{project}/stats', [ProjectStatsController::class, 'showStats']);
+        Route::post('/projects/{project}/sync', [ProjectStatsController::class, 'sync']);
     });
 });
 

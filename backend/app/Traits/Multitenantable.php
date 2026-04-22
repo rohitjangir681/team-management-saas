@@ -9,7 +9,7 @@ trait Multitenantable
 {
 
     /**
-     * The "boot" method of the trait. 
+     * The "boot" method of the trait.
      * Laravel automatically calls this when the Model starts.
      */
     public static function bootMultitenantable()
