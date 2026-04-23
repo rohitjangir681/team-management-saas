@@ -21,7 +21,7 @@ class ProjectStatsController extends Controller
 
         // 2. Force Redis to match MySQL
         // We use HMSET to overwrite the fields 'total' and 'completed'
-        Redis::hmset($key, [
+        Redis::hset($key, [
             'total' => $total,
             'completed' => $completed
         ]);
