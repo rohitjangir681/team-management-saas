@@ -38,14 +38,24 @@ class AuthController extends Controller
     public function login(LoginRequest $request): JsonResponse
     {
         $result = $this->authService->login($request->validated());
+        $user = $result['user'];
 
-        Auth::login($result['user']);
+        Auth::login($user);
 
-        $request->session()->regenerate();
+        // We wrap this in a check so it doesn't crash Postman
+        if($request->hasSession()){
+            $request->session()->regenerate();
+        }
+
+        // Add this for Postman/Mobile (Tokens)
+
+        $token = $user->createToken('api-token')->plainTextToken;
+
 
         return response()->json([
             'message' => 'Login successful',
-            'user' => $result['user']
+            'user' => $user,
+            'token' => $token
         ]);
     }
 
@@ -90,7 +100,7 @@ class AuthController extends Controller
         ]);
 
         // Clear the Redis cache for this user's roles
-        // Why? Because their role in Company A might be 'Owner', 
+        // Why? Because their role in Company A might be 'Owner',
         // but in Company B they might only be a 'Member'.
         $user->forgetCachedPermissions();
 

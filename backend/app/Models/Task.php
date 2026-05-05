@@ -16,7 +16,8 @@ class Task extends Model
         'priority',
         'project_id',
         'company_id',
-        'user_id'
+        'user_id',
+        'assigned_to'
     ];
 
     public function project()
