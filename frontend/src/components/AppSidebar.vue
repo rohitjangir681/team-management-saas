@@ -33,8 +33,8 @@ const props = withDefaults(defineProps<SidebarProps>(), {
 // This is sample data.
 const data = {
   user: {
-    name: "shadcn",
-    email: "m@example.com",
+    name: "Rohit",
+    email: "rohit@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
   teams: [
@@ -164,7 +164,7 @@ const data = {
 <template>
   <Sidebar v-bind="props">
     <SidebarHeader>
-      <TeamSwitcher :teams="data.teams" />
+      <TeamSwitcher />
     </SidebarHeader>
     <SidebarContent>
       <NavMain :items="data.navMain" />

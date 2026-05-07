@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { useAttrs } from "vue"
 import { cn } from "@/lib/utils"
+import type { ClassValue } from "clsx"
 
-const attrs = useAttrs()
+const attrs = useAttrs() as Record<string, unknown> & {
+  class?: ClassValue
+}
 </script>
 
 <template>

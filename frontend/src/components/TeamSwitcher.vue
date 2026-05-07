@@ -1,90 +1,58 @@
 <script setup lang="ts">
-import type { Component } from "vue"
+import type { Company } from '@/types';
+import axios from 'axios';
+import api from '@/lib/axios';
+import { onMounted, ref } from 'vue';
 
-import { ChevronsUpDown, Plus } from "lucide-vue-next"
-import { ref } from "vue"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
+const companies = ref<Company[]>([]);
+const activeId = ref<number | null>(null);
+const loading = ref(false);
 
-import {
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  useSidebar,
-} from '@/components/ui/sidebar'
+const fetchData = async () => {
+  try {
+    // This endpoint should return the user's companies and current_company_id
+    const { data } = await api.get('/auth/me');
 
-const props = defineProps<{
-  teams: {
-    name: string
-    logo: Component
-    plan: string
-  }[]
-}>()
+    if (data.user) {
+      companies.value = data.user.companies;
+      activeId.value = data.user.current_company_id;
+    }
 
-const { isMobile } = useSidebar()
-const activeTeam = ref(props.teams[0])
+  } catch (err) {
+    console.error('Failed to fetch workspaces', err);
+  }
+}
+
+const switchTeam = async () => {
+  if (!activeId.value) return;
+  loading.value = true;
+  try {
+    const response = await api.post('/workspace/switch', {
+      company_id: activeId.value
+    });
+
+    // Force reload so Laravel Global Scopes (Multitenantable) take effect
+    if(response.status === 200){
+      window.location.reload();
+    }
+  } catch (err: any) {
+    console.error('Full Error: ', err.response || err);
+    alert("Switch failed: " + (err.response?.data?.message || "Unknown error"));
+  } finally {
+    loading.value = false;
+  }
+}
+
+onMounted(fetchData);
 </script>
 
 <template>
-  <SidebarMenu>
-    <SidebarMenuItem>
-      <DropdownMenu>
-        <DropdownMenuTrigger as-child>
-          <SidebarMenuButton
-            size="lg"
-            class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-          >
-            <div class="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-              <component :is="activeTeam.logo" class="size-4" />
-            </div>
-            <div class="grid flex-1 text-left text-sm leading-tight">
-              <span class="truncate font-medium">
-                {{ activeTeam.name }}
-              </span>
-              <span class="truncate text-xs">{{ activeTeam.plan }}</span>
-            </div>
-            <ChevronsUpDown class="ml-auto" />
-          </SidebarMenuButton>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent
-          class="w-[--reka-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-          align="start"
-          :side="isMobile ? 'bottom' : 'right'"
-          :side-offset="4"
-        >
-          <DropdownMenuLabel class="text-xs text-muted-foreground">
-            Teams
-          </DropdownMenuLabel>
-          <DropdownMenuItem
-            v-for="(team, index) in teams"
-            :key="team.name"
-            class="gap-2 p-2"
-            @click="activeTeam = team"
-          >
-            <div class="flex size-6 items-center justify-center rounded-sm border">
-              <component :is="team.logo" class="size-3.5 shrink-0" />
-            </div>
-            {{ team.name }}
-            <DropdownMenuShortcut>⌘{{ index + 1 }}</DropdownMenuShortcut>
-          </DropdownMenuItem>
-          <DropdownMenuSeparator />
-          <DropdownMenuItem class="gap-2 p-2">
-            <div class="flex size-6 items-center justify-center rounded-md border bg-transparent">
-              <Plus class="size-4" />
-            </div>
-            <div class="font-medium text-muted-foreground">
-              Add team
-            </div>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </SidebarMenuItem>
-  </SidebarMenu>
+  <div class="px-3 py-2">
+    <select v-model="activeId" @change="switchTeam" :disabled="loading"
+      class="w-full bg-gray-800 text-white text-sm rounded-md border-none focus:ring-2 focus:ring-blue-500">
+      <option v-for="company in companies" :key="company.id" :value="company.id">
+        {{ company.name }}
+      </option>
+    </select>
+  </div>
 </template>

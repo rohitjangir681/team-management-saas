@@ -62,7 +62,7 @@ class AuthController extends Controller
     public function me(Request $request): JsonResponse
     {
         return response()->json([
-            'user' => $request->user()
+            'user' => $request->user()->load('companies'),
         ]);
     }
 
@@ -99,15 +99,11 @@ class AuthController extends Controller
             'current_company_id' => $request->company_id
         ]);
 
-        // Clear the Redis cache for this user's roles
-        // Why? Because their role in Company A might be 'Owner',
-        // but in Company B they might only be a 'Member'.
-        $user->forgetCachedPermissions();
 
         return response()->json([
             'message' => 'Workspace switched successfully',
             'current_company_id' => $user->current_company_id,
-            'user' => $user->load('currentCompany') // Give Vue.js the new company details
+            'user' => $user
         ]);
     }
 }
