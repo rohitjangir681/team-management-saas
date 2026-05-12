@@ -13,6 +13,11 @@ export const dashboardRoutes = [
                 path: 'users',
                 name: 'workspace.users',
                 component: () => import('@/views/workspace/users/UserView.vue'),
+            },
+            {
+              path: 'tasks',
+              name: 'workspace.tasks',
+              component: () => import('@/views/workspace/TasksView.vue'),
             }
         ]
     }

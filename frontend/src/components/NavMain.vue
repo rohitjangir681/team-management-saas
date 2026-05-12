@@ -17,17 +17,19 @@ import {
   SidebarMenuSubItem,
 } from '@/components/ui/sidebar'
 
-defineProps<{
-  items: {
+interface NavItem {
+  title: string;
+  url: string;
+  icon?: LucideIcon;
+  isActive?: boolean;
+  items?: {
     title: string
     url: string
-    icon?: LucideIcon
-    isActive?: boolean
-    items?: {
-      title: string
-      url: string
-    }[]
   }[]
+}
+
+defineProps<{
+  items: NavItem[]
 }>()
 </script>
 
@@ -54,9 +56,9 @@ defineProps<{
             <SidebarMenuSub>
               <SidebarMenuSubItem v-for="subItem in item.items" :key="subItem.title">
                 <SidebarMenuSubButton as-child>
-                  <a :href="subItem.url">
-                    <span>{{ subItem.title }}</span>
-                  </a>
+                    <RouterLink :to="subItem.url">
+                        <span>{{ subItem.title }}</span>
+                    </RouterLink>
                 </SidebarMenuSubButton>
               </SidebarMenuSubItem>
             </SidebarMenuSub>

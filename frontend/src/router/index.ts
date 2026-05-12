@@ -22,11 +22,11 @@ router.beforeEach(async (to) => {
     }
 
     if (!authStore.user) {
-      return { name: 'login' } 
+      return { name: 'login' }
     }
   }
 
-  return true 
+  return true
 })
 
 export default router

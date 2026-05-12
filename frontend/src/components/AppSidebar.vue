@@ -56,22 +56,22 @@ const data = {
   ],
   navMain: [
     {
-      title: "Playground",
+      title: "Workspace",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
-          title: "History",
-          url: "#",
+          title: "Dashboard",
+          url: "/dashboard",
         },
         {
-          title: "Starred",
-          url: "#",
+          title: "Tasks",
+          url: "/dashboard/tasks",
         },
         {
-          title: "Settings",
-          url: "#",
+          title: "Users",
+          url: "/dashboard/users",
         },
       ],
     },

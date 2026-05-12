@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectStatsController;
 use App\Http\Controllers\TaskAssignmentController;
+use App\Http\Controllers\TaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,8 @@ Route::middleware('auth:sanctum')->group(function () {
         // New Dashboard Stats Route
         Route::get('/dashboard/stats', [DashboardController::class, 'index']);
 
+        // get tasks
+        Route::get('/tasks', [TaskController::class, 'index']);
         // Your existing project routes
         Route::apiResource('projects', ProjectController::class);
 
