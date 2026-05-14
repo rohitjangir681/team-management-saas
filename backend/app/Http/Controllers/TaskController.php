@@ -36,27 +36,19 @@ class TaskController extends Controller
             'status' => 'in:todo,in_progress,done',
         ]);
 
-        // Does this project_id actually belong to the user's current company?
-        $projectExistsInCompany = Project::where('id', $validated['project_id'])
-            ->where('company_id', $user->current_company_id)
-            ->exists();
-
-        if (!$projectExistsInCompany) {
-            return response()->json(['message' => 'Invalid project for this workspace.'], 403);
-        }
 
         $task = Task::create([
             'title' => $validated['title'],
-            'description' => $validated['description'],
+            'description' => $validated['description'] ?? null,
             'project_id' => $validated['project_id'],
-            'company_id' => $user->current_company_id, // Hardcoded from Auth for safety
             'status' => $validated['status'] ?? 'todo',
             'priority' => $validated['priority'] ?? 'medium',
+            'user_id' => Auth::id(),
         ]);
 
         return response()->json([
             'message' => 'Task created successfully',
-            'task' => $task
+            'task' => $task->load('project')
         ], 201);
     }
 }

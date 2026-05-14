@@ -34,6 +34,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // get tasks
         Route::get('/tasks', [TaskController::class, 'index']);
+
+        // Post Task
+        Route::post('tasks', [TaskController::class, 'store']);
         // Your existing project routes
         Route::apiResource('projects', ProjectController::class);
 

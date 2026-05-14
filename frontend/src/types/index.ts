@@ -20,3 +20,12 @@ export interface Task {
   assigned_to?: number;
   created_at: string;
 }
+
+export interface Project {
+  id: number;
+  company_id: number;
+  name: string;
+  slug: string;
+  description?: string;
+  status: 'active' | 'archived' | 'completed';
+}

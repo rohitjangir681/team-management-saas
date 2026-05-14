@@ -10,10 +10,26 @@ export interface LoginData {
     password: string;
 }
 
+export interface Pivot {
+  user_id: number;
+  company_id: number;
+  role_id: number;
+  role_name: string;
+}
+
+export interface Company {
+  id: number;
+  name: string;
+  slug: string;
+  pivot: Pivot;
+}
+
 export interface User {
     id: number;
     name: string;
     email: string;
     email_verified_at: string | null;
+    current_company_id: number | null;
+    companies?: Company[];
 }
 

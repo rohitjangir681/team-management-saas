@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import CreateTaskModal from '@/components/tasks/CreateTaskModal.vue';
 import api from '@/lib/axios';
 import type { Task } from '@/types';
 import { onMounted, ref } from 'vue';
@@ -24,9 +25,7 @@ onMounted(fetchTasks);
   <div class="space-y-6">
     <div class="flex justify-between items-center">
       <h1 class="text-2xl font-bold tracking-tight">Tasks</h1>
-      <button class="bg-primary text-white px-4 py-2 rounded-md text-sm font-medium">
-        + New Task
-      </button>
+      <CreateTaskModal @task-created="fetchTasks" />
     </div>
 
     <div v-if="loading" class="flex justify-center py-10">

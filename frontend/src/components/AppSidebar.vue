@@ -25,6 +25,8 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '@/components/ui/sidebar'
+import { useAuthStore } from '@/stores/auth'
+import { computed } from 'vue'
 
 const props = withDefaults(defineProps<SidebarProps>(), {
   collapsible: "icon",
@@ -159,6 +161,10 @@ const data = {
     },
   ],
 }
+
+
+
+
 </script>
 
 <template>
