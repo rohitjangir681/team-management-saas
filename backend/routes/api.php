@@ -6,6 +6,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectStatsController;
 use App\Http\Controllers\TaskAssignmentController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\Workspace\TeamController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -44,6 +45,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/projects/{project}/stats', [ProjectStatsController::class, 'showStats']);
         Route::post('/projects/{project}/sync', [ProjectStatsController::class, 'sync']);
         Route::post('/tasks/{task}/assign', [TaskAssignmentController::class, 'assign']);
+
+        // Fetch team members for the active workspace
+        Route::get('/workspace/members', [TeamController::class, 'index']);
+
     });
 });
 
@@ -51,3 +56,4 @@ Route::middleware('auth:sanctum')->group(function () {
 Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
+

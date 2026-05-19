@@ -13,6 +13,7 @@ export const dashboardRoutes = [
                 path: 'users',
                 name: 'workspace.users',
                 component: () => import('@/views/workspace/users/UserView.vue'),
+                meta: { requiresAdmin: true },
             },
             {
               path: 'tasks',

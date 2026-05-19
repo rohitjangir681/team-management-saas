@@ -10,11 +10,18 @@ export interface LoginData {
     password: string;
 }
 
+export interface Role {
+  id: number;
+  name: string;
+  slug: string;
+}
+
 export interface Pivot {
   user_id: number;
   company_id: number;
   role_id: number;
   role_name: string;
+  role: Role;
 }
 
 export interface Company {
